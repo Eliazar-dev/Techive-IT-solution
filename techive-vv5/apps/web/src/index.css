@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply text-ink font-body;
+  /* Subtle brand-tinted wash instead of flat gray — ties the whole
+     page background to the cyan/purple accent system used everywhere
+     else, rather than a plain #f8fafc slab. */
+  background-color: #f8fafc;
+  background-image:
+    radial-gradient(circle at 15% 0%, rgba(6, 182, 212, 0.05), transparent 40%),
+    radial-gradient(circle at 85% 20%, rgba(168, 85, 247, 0.05), transparent 40%);
+  background-attachment: fixed;
+}
