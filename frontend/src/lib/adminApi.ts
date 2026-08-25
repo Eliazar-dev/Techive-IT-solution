@@ -1,5 +1,6 @@
 // src/lib/adminApi.ts
-const API_BASE = import.meta.env.VITE_API_BASE || "/api";
+const RAW_API_BASE = import.meta.env.VITE_API_BASE || "";
+const API_BASE = RAW_API_BASE ? `${RAW_API_BASE.replace(/\/+$/, "")}/api` : "/api";
 
 function authHeaders(token: string | null) {
   return {

@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { adminList } from "../../lib/adminApi";
 
+const RAW_API_BASE = import.meta.env.VITE_API_BASE || "";
+const API_BASE = RAW_API_BASE ? `${RAW_API_BASE.replace(/\/+$/, "")}/api` : "/api";
 const statuses = ["new", "in_progress", "resolved", "closed"];
 
 export default function AdminContact() {
@@ -24,7 +26,7 @@ export default function AdminContact() {
   useEffect(() => { load(); }, [filter]);
 
   const updateStatus = async (id: number, status: string) => {
-    await fetch(`${import.meta.env.VITE_API_BASE || "/api"}/admin/contact/${id}/status`, {
+    await fetch(`${API_BASE}/admin/contact/${id}/status`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
       body: JSON.stringify({ status }),

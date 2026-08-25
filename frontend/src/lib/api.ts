@@ -15,7 +15,8 @@ import type {
   ApiResponse,
 } from "@techive/shared";
 
-const API_BASE = import.meta.env.VITE_API_BASE || "/api";
+const RAW_API_BASE = import.meta.env.VITE_API_BASE || "";
+const API_BASE = RAW_API_BASE ? `${RAW_API_BASE.replace(/\/+$/, "")}/api` : "/api";
 
 async function apiCall<T>(endpoint: string, options?: RequestInit): Promise<T> {
   const res = await fetch(`${API_BASE}${endpoint}`, {
