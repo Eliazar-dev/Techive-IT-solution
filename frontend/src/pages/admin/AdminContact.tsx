@@ -1,8 +1,8 @@
 // src/pages/admin/AdminContact.tsx
 import { useEffect, useState } from "react";
 import { useAuth } from "../../context/AuthContext";
+import { adminList } from "../../lib/adminApi";
 
-const API_BASE = import.meta.env.VITE_API_BASE || "/api";
 const statuses = ["new", "in_progress", "resolved", "closed"];
 
 export default function AdminContact() {
@@ -11,20 +11,20 @@ export default function AdminContact() {
   const [filter, setFilter] = useState<string>("");
   const [loading, setLoading] = useState(true);
 
-  const load = () => {
+  const load = async () => {
     setLoading(true);
-    fetch(`${API_BASE}/admin/contact${filter ? `?status=${filter}` : ""}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-      .then((r) => r.json())
-      .then((res) => setItems(res.data))
-      .finally(() => setLoading(false));
+    try {
+      const res = await adminList(`contact${filter ? `?status=${filter}` : ""}`, token);
+      setItems(res.data);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => { load(); }, [filter]);
 
   const updateStatus = async (id: number, status: string) => {
-    await fetch(`${API_BASE}/admin/contact/${id}/status`, {
+    await fetch(`${import.meta.env.VITE_API_BASE || "/api"}/admin/contact/${id}/status`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
       body: JSON.stringify({ status }),

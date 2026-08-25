@@ -3,8 +3,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Bell } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
-
-const API_BASE = import.meta.env.VITE_API_BASE || "/api";
+import { adminDashboardStats } from "../../lib/adminApi";
 
 export default function AdminOverview() {
   const { token } = useAuth();
@@ -12,17 +11,17 @@ export default function AdminOverview() {
   const [recent, setRecent] = useState<any[]>([]);
 
   useEffect(() => {
-    const fetchStats = () => {
-      fetch(`${API_BASE}/admin/contact?status=new`, { headers: { Authorization: `Bearer ${token}` } })
-        .then((r) => r.json())
-        .then((res) => {
-          setNewCount(res.data.length);
-          setRecent(res.data.slice(0, 5));
-        })
-        .catch((err) => console.error(err));
+    const fetchStats = async () => {
+      try {
+        const res = await adminDashboardStats(token);
+        setNewCount(res.data.length);
+        setRecent(res.data.slice(0, 5));
+      } catch (err) {
+        console.error(err);
+      }
     };
     fetchStats();
-    const interval = setInterval(fetchStats, 30000); // poll every 30s
+    const interval = setInterval(fetchStats, 30000);
     return () => clearInterval(interval);
   }, [token]);
 

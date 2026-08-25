@@ -1,5 +1,6 @@
 // src/pages/admin/AdminDashboard.tsx
 import { Routes, Route } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import AdminLayout from "../../components/admin/AdminLayout";
 import AdminResourceList from "../../components/admin/AdminResourceList";
 import AdminOverview from "./AdminOverview";
@@ -11,6 +12,7 @@ export default function AdminDashboard() {
   return (
     <AdminLayout>
       <Routes>
+        <Route index element={<Navigate to="dashboard" replace />} />
         <Route path="dashboard" element={<AdminOverview />} />
 
         <Route

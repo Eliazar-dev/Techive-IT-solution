@@ -3,28 +3,20 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { adminList, adminUpdate } from "../../lib/adminApi";
 
-const API_BASE = import.meta.env.VITE_API_BASE || "/api";
-
 export default function AdminSettings() {
   const { token } = useAuth();
   const [form, setForm] = useState<any>(null);
   const [status, setStatus] = useState<"idle" | "saving" | "done" | "error">("idle");
 
   useEffect(() => {
-    fetch(`${API_BASE}/admin/settings`, { headers: { Authorization: `Bearer ${token}` } })
-      .then((r) => r.json())
-      .then((res) => setForm(res.data || {}));
-  }, []);
+    adminList("settings", token).then((res) => setForm(res.data || {}));
+  }, [token]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setStatus("saving");
     try {
-      await fetch(`${API_BASE}/admin/settings`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-        body: JSON.stringify(form),
-      });
+      await adminUpdate("settings", token, 0, form);
       setStatus("done");
     } catch {
       setStatus("error");
