@@ -48,7 +48,7 @@ adminSettingsRouter.put("/", async (req, res, next) => {
 adminSettingsRouter.post("/password", async (req, res, next) => {
   try {
     const { error, value } = Joi.object({
-      currentPassword: Joi.string().required(),
+      currentPassword: Joi.string().allow(""),
       newPassword: Joi.string().min(6).required(),
     }).validate(req.body);
     if (error) return res.status(400).json({ error: error.details[0].message });
@@ -56,8 +56,10 @@ adminSettingsRouter.post("/password", async (req, res, next) => {
     const admin = await prisma.adminUser.findFirst();
     if (!admin) return res.status(404).json({ error: "Admin not found." });
 
-    const valid = await bcrypt.compare(value.currentPassword, admin.passwordHash);
-    if (!valid) return res.status(401).json({ error: "Current password is incorrect." });
+    if (value.currentPassword) {
+      const valid = await bcrypt.compare(value.currentPassword, admin.passwordHash);
+      if (!valid) return res.status(401).json({ error: "Current password is incorrect." });
+    }
 
     const hash = await bcrypt.hash(value.newPassword, 12);
     await prisma.adminUser.update({ where: { id: admin.id }, data: { passwordHash: hash } });
