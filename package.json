@@ -2,15 +2,16 @@
   "name": "techive",
   "private": true,
   "workspaces": [
-    "apps/*",
-    "packages/*"
+    "frontend",
+    "backend",
+    "shared"
   ],
   "scripts": {
-    "dev:web": "npm run dev -w apps/web",
-    "dev:api": "npm run dev -w apps/api",
-    "build": "npm run build --prefix packages/shared && npm run build --prefix apps/web",
-    "build:web": "npm run build --prefix apps/web",
-    "build:shared": "npm run build --prefix packages/shared",
-    "build:api": "npm run build --prefix apps/api"
+    "dev:web": "npm run dev -w frontend",
+    "dev:api": "npm run dev -w backend",
+    "build": "npm run build --prefix shared && npm run build --prefix frontend && npm run build --prefix backend",
+    "build:web": "npm run build --prefix frontend",
+    "build:shared": "npm run build --prefix shared",
+    "build:api": "npm run build --prefix backend"
   }
 }
