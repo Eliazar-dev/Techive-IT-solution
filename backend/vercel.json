@@ -1,4 +1,9 @@
 {
   "buildCommand": "npm run build",
-  "installCommand": "npm install"
+  "installCommand": "npm install",
+  "functions": {
+    "src/vercel.ts": {
+      "includeFiles": "**"
+    }
+  }
 }
