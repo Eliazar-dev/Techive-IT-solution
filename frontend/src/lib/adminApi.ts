@@ -49,6 +49,15 @@ export const adminUpdate = async (resource: string, token: string | null, id: nu
     })
   );
 
+export const adminChangePassword = async (token: string | null, currentPassword: string, newPassword: string) =>
+  handle(
+    await fetch(`${API_BASE}/admin/settings/password`, {
+      method: "POST",
+      headers: authHeaders(token),
+      body: JSON.stringify({ currentPassword, newPassword }),
+    })
+  );
+
 export const adminDelete = async (resource: string, token: string | null, id: number) =>
   handle(
     await fetch(`${API_BASE}/admin/${resource}/${id}`, {

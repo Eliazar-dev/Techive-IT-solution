@@ -1,12 +1,15 @@
 // src/pages/admin/AdminSettings.tsx
 import { useEffect, useState } from "react";
 import { useAuth } from "../../context/AuthContext";
-import { adminList, adminUpdate } from "../../lib/adminApi";
+import { adminList, adminUpdate, adminChangePassword } from "../../lib/adminApi";
 
 export default function AdminSettings() {
   const { token } = useAuth();
   const [form, setForm] = useState<any>(null);
   const [status, setStatus] = useState<"idle" | "saving" | "done" | "error">("idle");
+  const [pwStatus, setPwStatus] = useState<"idle" | "saving" | "done" | "error">("idle");
+  const [currentPw, setCurrentPw] = useState("");
+  const [newPw, setNewPw] = useState("");
 
   useEffect(() => {
     adminList("settings", token).then((res) => setForm(res.data || {}));
@@ -20,6 +23,19 @@ export default function AdminSettings() {
       setStatus("done");
     } catch {
       setStatus("error");
+    }
+  };
+
+  const handlePasswordChange = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setPwStatus("saving");
+    try {
+      await adminChangePassword(token, currentPw, newPw);
+      setPwStatus("done");
+      setCurrentPw("");
+      setNewPw("");
+    } catch {
+      setPwStatus("error");
     }
   };
 
@@ -55,6 +71,36 @@ export default function AdminSettings() {
         </button>
         {status === "done" && <p className="text-sm text-cyan">Saved.</p>}
         {status === "error" && <p className="text-sm text-red-500">Save failed.</p>}
+      </form>
+
+      <form onSubmit={handlePasswordChange} className="bg-white border border-border rounded-card p-8 flex flex-col gap-4 mt-8">
+        <h2 className="font-heading font-bold text-lg text-ink">Change Password</h2>
+        <div>
+          <label className="font-body text-sm text-ink block mb-2">Current Password</label>
+          <input
+            type="password"
+            value={currentPw}
+            onChange={(e) => setCurrentPw(e.target.value)}
+            className="w-full border border-border rounded-btn px-3 py-2.5 font-body text-sm outline-none focus:border-cyan"
+            required
+          />
+        </div>
+        <div>
+          <label className="font-body text-sm text-ink block mb-2">New Password</label>
+          <input
+            type="password"
+            value={newPw}
+            onChange={(e) => setNewPw(e.target.value)}
+            className="w-full border border-border rounded-btn px-3 py-2.5 font-body text-sm outline-none focus:border-cyan"
+            required
+            minLength={6}
+          />
+        </div>
+        <button type="submit" disabled={pwStatus === "saving"} className="bg-brand-gradient rounded-btn py-3 font-body font-semibold text-sm text-white mt-2">
+          {pwStatus === "saving" ? "Updating…" : "Update Password"}
+        </button>
+        {pwStatus === "done" && <p className="text-sm text-cyan">Password updated.</p>}
+        {pwStatus === "error" && <p className="text-sm text-red-500">Password update failed.</p>}
       </form>
     </div>
   );
