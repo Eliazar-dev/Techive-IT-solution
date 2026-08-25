@@ -1,11 +1,16 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import path from "path";
 
 export default defineConfig({
   plugins: [react()],
+  resolve: {
+    alias: {
+      "@techive/shared": path.resolve(__dirname, "../shared/src/index.ts"),
+    },
+  },
   server: {
     proxy: {
-      // Local dev only — production uses vercel.json rewrites instead.
       "/api": "http://localhost:5000",
     },
   },
