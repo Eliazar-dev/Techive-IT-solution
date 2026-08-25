@@ -54,6 +54,7 @@ app.use("/api/newsletter/subscribe", contactLimiter);
 app.use("/api/chat", contactLimiter);
 
 app.get("/api/health", (_req, res) => res.json({ status: "ok" }));
+app.get("/", (_req, res) => res.json({ name: "Techive API", version: "1.0.0", endpoints: ["/api/health", "/api/services", "/api/solutions", "/api/courses", "/api/projects", "/api/team", "/api/blog", "/api/testimonials", "/api/contact", "/api/newsletter", "/api/settings", "/api/gallery", "/api/chat", "/api/admin/auth/login"] }));
 app.use("/api/services", publicServicesRouter);
 app.use("/api/solutions", publicSolutionsRouter);
 app.use("/api/courses", publicCoursesRouter);
