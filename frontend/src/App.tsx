@@ -4,7 +4,7 @@
 // reference/FIGMA_NODE_MAP.md, wired to real data via src/lib/api.ts —
 // NOT hardcoded content. See reference/navbar_reference.tsx and
 // hero_reference.tsx for exact styling to match.
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import Home from "./pages/Home";
 import Services from "./pages/Services";
 import Solutions from "./pages/Solutions";
@@ -51,6 +51,7 @@ export default function App() {
       <Route path="/contact" element={<PublicLayout><Contact /></PublicLayout>} />
 
       <Route path="/admin/login" element={<AdminLogin />} />
+      <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
       <Route
         path="/admin/*"
         element={
