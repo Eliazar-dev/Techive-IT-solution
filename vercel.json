@@ -1,10 +1,5 @@
 {
   "installCommand": "npm install",
-  "buildCommand": "npm install && npm run build --prefix packages/shared && npm run build --prefix apps/web",
-  "outputDirectory": "apps/web/dist",
-  "functions": {
-    "api/index.ts": {
-      "includeFiles": "apps/api/**"
-    }
-  }
+  "buildCommand": "npm run build",
+  "outputDirectory": "apps/web/dist"
 }
